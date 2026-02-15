@@ -1,57 +1,70 @@
-let events = JSON.parse(localStorage.getItem("events")) || [];
+// This is where we store our list of events
+let eventData = [];
 
-function saveEvents(){
-    localStorage.setItem("events", JSON.stringify(events));
-    renderEvents();
-}
+// This function runs when you click "Add to List"
+function addEvent() {
+    const titleInput = document.getElementById('eventTitle');
+    const dateInput = document.getElementById('eventDate');
+    const categoryInput = document.getElementById('eventCategory');
+    const descInput = document.getElementById('eventDesc');
 
-function addEvent(){
-    const title = document.getElementById("title").value.trim();
-    const date = document.getElementById("date").value;
-    const category = document.getElementById("category").value;
-    const desc = document.getElementById("desc").value;
-
-    if(!title || !date){
-        alert("Enter title and date");
+    // Basic check: Don't add if title is empty
+    if (titleInput.value === "") {
+        alert("Please give your event a name!");
         return;
     }
 
-    events.push({title,date,category,desc});
-    saveEvents();
+    // Create a "package" (object) for our new event
+    const newEvent = {
+        id: Date.now(), // Unique ID based on time
+        title: titleInput.value,
+        date: dateInput.value,
+        category: categoryInput.value,
+        description: descInput.value
+    };
 
-    document.getElementById("title").value="";
-    document.getElementById("date").value="";
-    document.getElementById("desc").value="";
+    // Add it to our list and update the screen
+    eventData.push(newEvent);
+    updateDisplay();
+
+    // Clear the form fields for the next entry
+    titleInput.value = "";
+    descInput.value = "";
 }
 
-function renderEvents(){
-    const list=document.getElementById("list");
-    const empty=document.getElementById("empty");
-
-    list.innerHTML="";
-
-    if(events.length===0){
-        empty.style.display="block";
+// This function refreshes the UI to show current events
+function updateDisplay() {
+    const listArea = document.getElementById('eventList');
+    
+    // If no events, show the empty message
+    if (eventData.length === 0) {
+        listArea.innerHTML = '<p class="empty-msg">Your schedule is empty. Add an event!</p>';
         return;
     }
 
-    empty.style.display="none";
-
-    events.forEach(e=>{
-        const div=document.createElement("div");
-        div.className="event";
-        div.innerHTML=`
-            <strong>${e.title}</strong><br>
-            📅 ${e.date} | ${e.category}<br>
-            ${e.desc}
-        `;
-        list.appendChild(div);
-    });
+    // Otherwise, build the HTML for each card
+    listArea.innerHTML = eventData.map(item => `
+        <div class="event-card">
+            <div>
+                <small>${item.date} | ${item.category}</small>
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+            </div>
+            <button onclick="removeOne(${item.id})" style="color:red; background:none; border:none; cursor:pointer;">Delete</button>
+        </div>
+    `).join('');
 }
 
-function clearEvents(){
-    events=[];
-    saveEvents();
+// Remove a single event
+function removeOne(id) {
+    eventData = eventData.filter(item => item.id !== id);
+    updateDisplay();
 }
 
-renderEvents();
+// Wipe everything
+function clearAll() {
+    if(confirm("Are you sure you want to clear everything?")) {
+        eventData = [];
+        updateDisplay();
+    }
+}
