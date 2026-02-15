@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Smart Event Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <div class="title">
+        <span> Smart Event Dashboard</span>
+    </div>
+
+    <div class="dashboard">
+        <div class="card form-card">
+            <h3>Add New Event</h3>
+
+            <label>Event Title</label>
+            <input id="title">
+
+            <label>Event Date</label>
+            <input type="date" id="date">
+
+            <label>Category</label>
+            <select id="category">
+                <option>Conference</option>
+                <option>Workshop</option>
+                <option>Seminar</option>
+                <option>Exam</option>
+            </select>
+
+            <label>Description</label>
+            <textarea id="desc" rows="3"></textarea>
+
+            <button class="btn" onclick="addEvent()">Add Event</button>
+        </div>
+
+        <div class="card events-card">
+            <h3>My Events</h3>
+
+            <div class="top-actions">
+                <button class="small-btn" onclick="clearEvents()">Clear All</button>
+            </div>
+
+            <div id="list"></div>
+            <p class="empty" id="empty">No events yet. Add your first event!</p>
+        </div>
+
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
